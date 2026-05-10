@@ -1,0 +1,8 @@
+student-backend/node_modules
+student-frontend/node_modules
+
+student-backend/.env
+student-frontend/.env
+
+build
+dist
