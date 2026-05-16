@@ -7,31 +7,32 @@ dotenv.config();
 
 const app = express();
 
-
 // IMPORT ROUTES
 const studentRoutes = require("./routes/studentRoutes");
 const authRoutes = require("./routes/authRoutes");
-
 
 // MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 
-
 // DATABASE CONNECTION
-mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-  console.log("MongoDB Connected");
-})
-.catch((error) => {
-  console.log(error);
-});
-
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("MongoDB Connected");
+  })
+  .catch((error) => {
+    console.log("MongoDB Connection Error:", error);
+  });
 
 // ROUTES
 app.use("/api/students", studentRoutes);
 app.use("/api/auth", authRoutes);
 
+// DEFAULT ROUTE
+app.get("/", (req, res) => {
+  res.send("Student Management Backend Running 🚀");
+});
 
 // SERVER
 const PORT = process.env.PORT || 5000;
