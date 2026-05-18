@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth";
+// LIVE BACKEND URL
+const API_URL = "https://student-backend-2dnf.onrender.com/api/auth";
 
 // REGISTER USER
 export const registerUser = async (userData) => {
