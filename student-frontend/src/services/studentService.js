@@ -8,13 +8,19 @@ const getToken = () => {
   return localStorage.getItem("token");
 };
 
+// COMMON AUTH HEADER
+const authHeader = () => ({
+  headers: {
+    Authorization: `Bearer ${getToken()}`,
+  },
+});
+
 // GET ALL STUDENTS
 export const getStudents = async () => {
-  return await axios.get(API_URL, {
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
+  return await axios.get(
+    API_URL,
+    authHeader()
+  );
 };
 
 // ADD STUDENT
@@ -22,11 +28,7 @@ export const addStudent = async (studentData) => {
   return await axios.post(
     API_URL,
     studentData,
-    {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    }
+    authHeader()
   );
 };
 
@@ -34,10 +36,18 @@ export const addStudent = async (studentData) => {
 export const deleteStudent = async (id) => {
   return await axios.delete(
     `${API_URL}/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    }
+    authHeader()
+  );
+};
+
+// UPDATE STUDENT
+export const updateStudent = async (
+  id,
+  studentData
+) => {
+  return await axios.put(
+    `${API_URL}/${id}`,
+    studentData,
+    authHeader()
   );
 };
