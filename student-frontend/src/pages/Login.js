@@ -23,18 +23,30 @@ function Login() {
     try {
       const response = await loginUser(formData);
 
-      localStorage.setItem("token", response.data.token);
+      // SAVE TOKEN
+      localStorage.setItem(
+        "token",
+        response.data.token
+      );
 
+      // SAVE USER DATA
       localStorage.setItem(
         "user",
         JSON.stringify(response.data.user)
       );
 
-      alert("Login Successful");
+      alert("Login Successful ✅");
 
+      // REDIRECT
       navigate("/dashboard");
+
     } catch (error) {
-      alert("Login Failed");
+      console.log(error);
+
+      alert(
+        error.response?.data?.message ||
+        "Login Failed ❌"
+      );
     }
   };
 
@@ -44,6 +56,7 @@ function Login() {
         <h1>Welcome Back 👋</h1>
 
         <form onSubmit={handleSubmit}>
+
           <input
             type="email"
             name="email"
@@ -65,6 +78,7 @@ function Login() {
           <button type="submit">
             Login
           </button>
+
         </form>
 
         <div className="link-text">
