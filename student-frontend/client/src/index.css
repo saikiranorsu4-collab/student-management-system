@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* RESET */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* BODY */
+
+body {
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+/* DARK MODE */
+
+.dark body {
+  background: #020817;
+  color: white;
+}
+
+/* LIGHT MODE */
+
+.light body {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* GLOBAL CARD */
+
+.card {
+  border-radius: 24px;
+  transition: all 0.3s ease;
+}
+
+/* DARK CARD */
+
+.dark .card {
+  background: #081028;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+/* LIGHT CARD */
+
+.light .card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* INPUTS */
+
+input,
+select,
+textarea {
+  transition: all 0.3s ease;
+}
+
+/* DARK INPUT */
+
+.dark input,
+.dark select,
+.dark textarea {
+  background: #0b1739;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* LIGHT INPUT */
+
+.light input,
+.light select,
+.light textarea {
+  background: white;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+}
+
+/* PLACEHOLDER */
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7c3aed;
+  border-radius: 999px;
+}
+
+/* BUTTON ANIMATION */
+
+button {
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* TABLE */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* TEXT SELECTION */
+
+::selection {
+  background: #9333ea;
+  color: white;
+}
