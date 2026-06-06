@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import axios from "axios";
 import toast from "react-hot-toast";
 
 import { Link } from "react-router-dom";
@@ -19,8 +18,9 @@ import Loader from "../../components/common/Loader";
 
 import useStudentStore from "../../store/studentStore";
 
-function AdminDashboard() {
+import api from "../../services/api";
 
+function AdminDashboard() {
   const {
     students,
     fetchStudents,
@@ -31,19 +31,12 @@ function AdminDashboard() {
     dashboardStats,
     setDashboardStats,
   ] = useState({
-
     totalStudents: 0,
-
     totalTeachers: 0,
-
     totalFees: 0,
-
     todayAttendance: 0,
-
     paidFees: 0,
-
     pendingFees: 0,
-
   });
 
   const [
@@ -52,76 +45,50 @@ function AdminDashboard() {
   ] = useState(true);
 
   useEffect(() => {
-
     loadData();
-
   }, []);
 
   const loadData =
     async () => {
-
       try {
-
-        const token =
-          localStorage.getItem(
-            "token"
-          );
-
         await fetchStudents();
 
         const response =
-          await axios.get(
-
-            "http://localhost:5000/api/dashboard/stats",
-
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
-              },
-            }
-
+          await api.get(
+            "/dashboard/stats"
           );
 
         setDashboardStats(
           response.data
         );
-
       } catch (error) {
-
-        console.log(error);
+        console.error(
+          "Dashboard Error:",
+          error
+        );
 
         toast.error(
-          "Failed to load dashboard"
+          error?.response?.data
+            ?.message ||
+            "Failed to load dashboard"
         );
-
       } finally {
-
-        setStatsLoading(
-          false
-        );
-
+        setStatsLoading(false);
       }
-
     };
 
   if (
     loading ||
     statsLoading
   ) {
-
     return <Loader />;
-
   }
 
   return (
-
     <div className="space-y-6">
-
       {/* HEADER */}
 
       <div>
-
         <h1
           className="
           text-4xl
@@ -138,10 +105,10 @@ function AdminDashboard() {
           mt-2
         "
         >
-          Manage students, teachers,
+          Manage students,
+          teachers,
           attendance and fees.
         </p>
-
       </div>
 
       {/* STATS */}
@@ -155,7 +122,6 @@ function AdminDashboard() {
         gap-5
       "
       >
-
         <StatsCard
           title="Total Students"
           value={
@@ -205,7 +171,6 @@ function AdminDashboard() {
           }
           color="from-red-500 to-pink-500"
         />
-
       </div>
 
       {/* CHART */}
@@ -227,7 +192,6 @@ function AdminDashboard() {
         p-6
       "
       >
-
         <div
           className="
           flex
@@ -236,9 +200,7 @@ function AdminDashboard() {
           mb-6
         "
         >
-
           <div>
-
             <h2
               className="
               text-2xl
@@ -255,9 +217,9 @@ function AdminDashboard() {
               mt-1
             "
             >
-              Latest registered students
+              Latest registered
+              students
             </p>
-
           </div>
 
           <Link
@@ -273,22 +235,17 @@ function AdminDashboard() {
           >
             View All
           </Link>
-
         </div>
 
         <div className="overflow-x-auto">
-
           <table className="w-full">
-
             <thead>
-
               <tr
                 className="
                 border-b
                 border-gray-800
               "
               >
-
                 <th className="py-4 text-left">
                   Name
                 </th>
@@ -304,20 +261,14 @@ function AdminDashboard() {
                 <th className="py-4 text-left">
                   Age
                 </th>
-
               </tr>
-
             </thead>
 
             <tbody>
-
               {students
-                .slice(0, 5)
-                .map(
-                  (
-                    student
-                  ) => (
-
+                ?.slice(0, 5)
+                ?.map(
+                  (student) => (
                     <tr
                       key={
                         student._id
@@ -327,7 +278,6 @@ function AdminDashboard() {
                       border-gray-800
                     "
                     >
-
                       <td className="py-4">
                         {
                           student.name
@@ -351,24 +301,15 @@ function AdminDashboard() {
                           student.age
                         }
                       </td>
-
                     </tr>
-
                   )
                 )}
-
             </tbody>
-
           </table>
-
         </div>
-
       </div>
-
     </div>
-
   );
-
 }
 
 export default AdminDashboard;

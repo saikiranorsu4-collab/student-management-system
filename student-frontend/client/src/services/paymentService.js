@@ -4,60 +4,76 @@ import api from "./api";
 // CREATE ORDER
 // ====================================
 
-export const createOrder =
-  async (
-    feeId,
-    amount
-  ) => {
-
+export const createOrder = async (
+  feeId,
+  amount
+) => {
+  try {
     const response =
       await api.post(
-
         "/payments/create-order",
-
         {
           feeId,
           amount,
         }
-
       );
 
     return response.data;
-  };
+  } catch (error) {
+    console.error(
+      "Create Order Error:",
+      error
+    );
+
+    throw error;
+  }
+};
 
 // ====================================
 // VERIFY PAYMENT
 // ====================================
 
 export const verifyPayment =
-  async (
-    paymentData
-  ) => {
+  async (paymentData) => {
+    try {
+      const response =
+        await api.post(
+          "/payments/verify-payment",
+          paymentData
+        );
 
-    const response =
-      await api.post(
-
-        "/payments/verify-payment",
-
-        paymentData
-
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Verify Payment Error:",
+        error
       );
 
-    return response.data;
+      throw error;
+    }
   };
-  
+
 // ====================================
 // PAYMENT HISTORY
 // ====================================
 
 export const getPaymentHistory =
   async () => {
-    const response =
-      await api.get(
-        "/payments/history"
+    try {
+      const response =
+        await api.get(
+          "/payments/history"
+        );
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Payment History Error:",
+        error
       );
 
-    return response.data;
+      throw error;
+    }
   };
 
 // ====================================
@@ -66,8 +82,11 @@ export const getPaymentHistory =
 
 export const downloadReceipt =
   (paymentId) => {
+    const baseURL =
+      import.meta.env.VITE_API_URL;
+
     window.open(
-      `http://localhost:5000/api/payments/receipt/${paymentId}`,
+      `${baseURL}/payments/receipt/${paymentId}`,
       "_blank"
     );
   };

@@ -1,82 +1,25 @@
-import axios from "axios";
-
-// ====================================
-// API BASE URL
-// ====================================
-
-const API_URL =
-  "http://localhost:5000/api/fees";
-
-// ====================================
-// AXIOS INSTANCE
-// ====================================
-
-const api = axios.create({
-
-  baseURL: API_URL,
-
-  headers: {
-    "Content-Type":
-      "application/json",
-  },
-
-});
-
-// ====================================
-// REQUEST INTERCEPTOR
-// ====================================
-
-api.interceptors.request.use(
-
-  (config) => {
-
-    const token =
-      localStorage.getItem(
-        "token"
-      );
-
-    if (token) {
-
-      config.headers.Authorization =
-        `Bearer ${token}`;
-
-    }
-
-    return config;
-
-  },
-
-  (error) =>
-    Promise.reject(error)
-
-);
+import api from "./api";
 
 // ====================================
 // GET ALL FEES
 // ====================================
 
-export const getFees =
-  async () => {
+export const getFees = async () => {
+  try {
+    const response = await api.get(
+      "/fees"
+    );
 
-    try {
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Get Fees Error:",
+      error
+    );
 
-      const response =
-        await api.get("/");
-
-      return response.data;
-
-    } catch (error) {
-
-      console.error(
-        "Get Fees Error:",
-        error
-      );
-
-      throw error;
-
-    }
-
-  };
+    throw error;
+  }
+};
 
 // ====================================
 // GET STUDENT FEES
@@ -84,27 +27,21 @@ export const getFees =
 
 export const getStudentFees =
   async (studentId) => {
-
     try {
-
       const response =
         await api.get(
-          `/student/${studentId}`
+          `/fees/student/${studentId}`
         );
 
       return response.data;
-
     } catch (error) {
-
       console.error(
         "Get Student Fees Error:",
         error
       );
 
       throw error;
-
     }
-
   };
 
 // ====================================
@@ -113,27 +50,21 @@ export const getStudentFees =
 
 export const getMyFees =
   async () => {
-
     try {
-
       const response =
         await api.get(
-          "/my-fees"
+          "/fees/my-fees"
         );
 
       return response.data;
-
     } catch (error) {
-
       console.error(
         "Get My Fees Error:",
         error
       );
 
       throw error;
-
     }
-
   };
 
 // ====================================
@@ -142,28 +73,22 @@ export const getMyFees =
 
 export const createFee =
   async (feeData) => {
-
     try {
-
       const response =
         await api.post(
-          "/",
+          "/fees",
           feeData
         );
 
       return response.data;
-
     } catch (error) {
-
       console.error(
         "Create Fee Error:",
         error
       );
 
       throw error;
-
     }
-
   };
 
 // ====================================
@@ -175,28 +100,22 @@ export const updateFee =
     id,
     feeData
   ) => {
-
     try {
-
       const response =
         await api.put(
-          `/${id}`,
+          `/fees/${id}`,
           feeData
         );
 
       return response.data;
-
     } catch (error) {
-
       console.error(
         "Update Fee Error:",
         error
       );
 
       throw error;
-
     }
-
   };
 
 // ====================================
@@ -208,33 +127,24 @@ export const collectPayment =
     feeId,
     amount
   ) => {
-
     try {
-
       const response =
         await api.put(
-
-          `/pay/${feeId}`,
-
+          `/fees/pay/${feeId}`,
           {
             amount,
           }
-
         );
 
       return response.data;
-
     } catch (error) {
-
       console.error(
         "Collect Payment Error:",
         error
       );
 
       throw error;
-
     }
-
   };
 
 // ====================================
@@ -243,27 +153,21 @@ export const collectPayment =
 
 export const deleteFee =
   async (id) => {
-
     try {
-
       const response =
         await api.delete(
-          `/${id}`
+          `/fees/${id}`
         );
 
       return response.data;
-
     } catch (error) {
-
       console.error(
         "Delete Fee Error:",
         error
       );
 
       throw error;
-
     }
-
   };
 
 // ====================================
@@ -272,25 +176,19 @@ export const deleteFee =
 
 export const getFeeById =
   async (id) => {
-
     try {
-
       const response =
         await api.get(
-          `/${id}`
+          `/fees/${id}`
         );
 
       return response.data;
-
     } catch (error) {
-
       console.error(
         "Get Fee By ID Error:",
         error
       );
 
       throw error;
-
     }
-
   };
