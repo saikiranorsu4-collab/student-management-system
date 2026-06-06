@@ -6,6 +6,7 @@ import {
   Settings,
   User,
   ChevronDown,
+  Menu,
 } from "lucide-react";
 
 import { useTheme } from "../../context/ThemeContext";
@@ -21,9 +22,13 @@ import {
   useSearch,
 } from "../../context/SearchContext";
 
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+} from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({
+  setSidebarOpen,
+}) => {
   const { darkMode, toggleTheme } =
     useTheme();
 
@@ -35,12 +40,14 @@ const Navbar = () => {
     setSearchTerm,
   } = useSearch();
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
   const [open, setOpen] =
     useState(false);
 
-  const menuRef = useRef(null);
+  const menuRef =
+    useRef(null);
 
   useEffect(() => {
     const handler = (e) => {
@@ -89,56 +96,89 @@ const Navbar = () => {
       z-50
     "
     >
-      {/* SEARCH BAR ONLY FOR ADMIN & TEACHER */}
+      {/* LEFT SIDE */}
 
-      {user?.role !== "student" ? (
-        <div
+      <div
+        className="
+        flex
+        items-center
+        gap-3
+      "
+      >
+        {/* MOBILE MENU */}
+
+        <button
+          onClick={() =>
+            setSidebarOpen(true)
+          }
           className="
-          relative
-          w-[180px]
-          sm:w-[250px]
-          md:w-[350px]
+          lg:hidden
+          w-11
+          h-11
+          rounded-xl
+          bg-slate-900
+          border
+          border-slate-800
+          flex
+          items-center
+          justify-center
         "
         >
-          <Search
-            size={18}
-            className="
-            absolute
-            left-4
-            top-1/2
-            -translate-y-1/2
-            text-gray-400
-          "
-          />
+          <Menu size={22} />
+        </button>
 
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) =>
-              setSearchTerm(
-                e.target.value
-              )
-            }
-            placeholder="Search Students, Teachers..."
-            className="
-            w-full
-            h-11
-            pl-12
-            pr-4
-            rounded-xl
-            bg-slate-900
-            border
-            border-slate-800
-            outline-none
-            text-white
-          "
-          />
-        </div>
-      ) : (
-        <div />
-      )}
+        {/* SEARCH */}
 
-      {/* RIGHT SECTION */}
+        {user?.role !==
+        "student" ? (
+          <div
+            className="
+            relative
+            w-[180px]
+            sm:w-[250px]
+            md:w-[350px]
+          "
+          >
+            <Search
+              size={18}
+              className="
+              absolute
+              left-4
+              top-1/2
+              -translate-y-1/2
+              text-gray-400
+            "
+            />
+
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) =>
+                setSearchTerm(
+                  e.target.value
+                )
+              }
+              placeholder="Search Students..."
+              className="
+              w-full
+              h-11
+              pl-12
+              pr-4
+              rounded-xl
+              bg-slate-900
+              border
+              border-slate-800
+              outline-none
+              text-white
+            "
+            />
+          </div>
+        ) : (
+          <div />
+        )}
+      </div>
+
+      {/* RIGHT SIDE */}
 
       <div
         className="
@@ -225,7 +265,9 @@ const Navbar = () => {
               </p>
             </div>
 
-            <ChevronDown size={16} />
+            <ChevronDown
+              size={16}
+            />
           </button>
 
           {open && (
@@ -244,7 +286,9 @@ const Navbar = () => {
             >
               <button
                 onClick={() => {
-                  navigate("/settings");
+                  navigate(
+                    "/settings"
+                  );
                   setOpen(false);
                 }}
                 className="
@@ -263,7 +307,9 @@ const Navbar = () => {
 
               <button
                 onClick={() => {
-                  navigate("/settings");
+                  navigate(
+                    "/settings"
+                  );
                   setOpen(false);
                 }}
                 className="
@@ -276,12 +322,16 @@ const Navbar = () => {
                 hover:bg-slate-800
               "
               >
-                <Settings size={18} />
+                <Settings
+                  size={18}
+                />
                 Settings
               </button>
 
               <button
-                onClick={handleLogout}
+                onClick={
+                  handleLogout
+                }
                 className="
                 w-full
                 px-4
@@ -293,7 +343,9 @@ const Navbar = () => {
                 hover:bg-red-500/10
               "
               >
-                <LogOut size={18} />
+                <LogOut
+                  size={18}
+                />
                 Logout
               </button>
             </div>
