@@ -1,99 +1,51 @@
 import api from "./api";
 
-// ====================================
-// CREATE ORDER
-// ====================================
-
 export const createOrder = async (
   feeId,
   amount
 ) => {
-  try {
-    const response =
-      await api.post(
-        "/payments/create-order",
-        {
-          feeId,
-          amount,
-        }
-      );
+  const response = await api.post(
+    "/payments/create-order",
+    {
+      feeId,
+      amount,
+    }
+  );
 
-    return response.data;
-  } catch (error) {
-    console.error(
-      "Create Order Error:",
-      error
-    );
-
-    throw error;
-  }
+  return response.data;
 };
 
-// ====================================
-// VERIFY PAYMENT
-// ====================================
+export const verifyPayment = async (
+  paymentData
+) => {
+  const response = await api.post(
+    "/payments/verify-payment",
+    paymentData
+  );
 
-export const verifyPayment =
-  async (paymentData) => {
-    try {
-      const response =
-        await api.post(
-          "/payments/verify-payment",
-          paymentData
-        );
-
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Verify Payment Error:",
-        error
-      );
-
-      throw error;
-    }
-  };
-
-// ====================================
-// PAYMENT HISTORY
-// ====================================
+  return response.data;
+};
 
 export const getPaymentHistory =
   async () => {
-    try {
-      const response =
-        await api.get(
-          "/payments/history"
-        );
-
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Payment History Error:",
-        error
-      );
-
-      throw error;
-    }
-  };
-
-// ====================================
-// DOWNLOAD RECEIPT
-// ====================================
-
-export const downloadReceipt =
-  (paymentId) => {
-    const baseURL =
-      import.meta.env.VITE_API_URL;
-
-    window.open(
-      `${baseURL}/payments/receipt/${paymentId}`,
-      "_blank"
+    const response = await api.get(
+      "/payments/history"
     );
+
+    return response.data;
   };
 
-// ====================================
-// LOAD RAZORPAY
-// ====================================
+export const downloadReceipt = (
+  paymentId
+) => {
+  const API_URL =
+    import.meta.env.VITE_API_URL;
+
+  window.open(
+    `${API_URL}/payments/receipt/${paymentId}`,
+    "_blank"
+  );
+};
 
 export const loadRazorpayScript =
   () => {
@@ -107,11 +59,11 @@ export const loadRazorpayScript =
         script.src =
           "https://checkout.razorpay.com/v1/checkout.js";
 
-        script.onload =
-          () => resolve(true);
+        script.onload = () =>
+          resolve(true);
 
-        script.onerror =
-          () => resolve(false);
+        script.onerror = () =>
+          resolve(false);
 
         document.body.appendChild(
           script

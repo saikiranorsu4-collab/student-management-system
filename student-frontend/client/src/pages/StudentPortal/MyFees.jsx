@@ -62,159 +62,203 @@ function MyFees() {
       }
     };
 
-  const handlePayment =
-    async (fee) => {
+  const handlePayment = async (fee) => {
+  try {
 
-      try {
+    setProcessingFeeId(
+      fee._id
+    );
 
-        setProcessingFeeId(
-          fee._id
-        );
+    const razorpayLoaded =
+      await loadRazorpayScript();
 
-        const razorpayLoaded =
-          await loadRazorpayScript();
+    if (!razorpayLoaded) {
 
-        if (
-          !razorpayLoaded
-        ) {
-          alert(
-            "Failed to load Razorpay"
-          );
-          return;
-        }
+      alert(
+        "Failed to load Razorpay"
+      );
 
-        const orderData =
-          await createOrder(
-            fee._id,
-            fee.remainingAmount
-          );
+      return;
 
-        const order =
-          orderData.order;
+    }
 
-        const options = {
+    const orderData =
+      await createOrder(
+        fee._id,
+        fee.remainingAmount
+      );
 
-          key:
-            import.meta.env
-              .VITE_RAZORPAY_KEY_ID,
+    console.log(
+      "ORDER DATA:",
+      orderData
+    );
 
-          amount:
-            order.amount,
+    const {
+      success,
+      key,
+      order,
+    } = orderData;
 
-          currency:
-            order.currency,
+    if (!success || !order) {
 
-          name:
-            "EduManage",
+      alert(
+        "Order creation failed"
+      );
 
-          description:
-            "Student Fee Payment",
+      return;
 
-          order_id:
-            order.id,
+    }
 
-          handler:
-            async (
-              response
-            ) => {
+    if (!key) {
 
-              try {
+      alert(
+        "Razorpay Key Missing From Backend"
+      );
 
-                await verifyPayment({
+      return;
 
-                  feeId:
-                    fee._id,
+    }
 
-                  amount:
-                    fee.remainingAmount,
+    const options = {
 
-                  razorpay_order_id:
-                    response.razorpay_order_id,
+      key: key,
 
-                  razorpay_payment_id:
-                    response.razorpay_payment_id,
+      amount:
+        order.amount,
 
-                  razorpay_signature:
-                    response.razorpay_signature,
+      currency:
+        order.currency,
 
-                });
+      name:
+        "EduManage",
 
-                alert(
-                  "Payment Successful"
-                );
+      description:
+        "Student Fee Payment",
 
-                await loadFees();
+      order_id:
+        order.id,
 
-                navigate(
-                  "/payment-history"
-                );
+      handler:
+        async (
+          response
+        ) => {
 
-              } catch (
-                error
-              ) {
+          try {
 
-                console.log(
-                  error
-                );
+            await verifyPayment({
 
-                alert(
-                  "Payment Verification Failed"
-                );
+              feeId:
+                fee._id,
 
-              }
+              amount:
+                fee.remainingAmount,
 
-            },
+              razorpay_order_id:
+                response.razorpay_order_id,
 
-          theme: {
-            color:
-              "#7C3AED",
+              razorpay_payment_id:
+                response.razorpay_payment_id,
+
+              razorpay_signature:
+                response.razorpay_signature,
+
+            });
+
+            alert(
+              "Payment Successful"
+            );
+
+            await loadFees();
+
+            navigate(
+              "/payment-history"
+            );
+
+          } catch (
+            error
+          ) {
+
+            console.log(
+              error
+            );
+
+            alert(
+              "Payment Verification Failed"
+            );
+
+          }
+
+        },
+
+      prefill: {
+
+        name:
+          JSON.parse(
+            localStorage.getItem(
+              "user"
+            )
+          )?.name || "",
+
+        email:
+          JSON.parse(
+            localStorage.getItem(
+              "user"
+            )
+          )?.email || "",
+
+      },
+
+      theme: {
+        color:
+          "#7C3AED",
+      },
+
+      modal: {
+
+        ondismiss:
+          () => {
+
+            setProcessingFeeId(
+              null
+            );
+
           },
 
-          modal: {
-
-            ondismiss:
-              () => {
-
-                setProcessingFeeId(
-                  null
-                );
-
-              },
-
-          },
-
-        };
-
-        const paymentObject =
-          new window.Razorpay(
-            options
-          );
-
-        paymentObject.open();
-
-      } catch (error) {
-
-        console.log(
-          error
-        );
-
-        alert(
-          error?.response
-            ?.data
-            ?.message ||
-            "Payment Failed"
-        );
-
-      } finally {
-
-        setProcessingFeeId(
-          null
-        );
-
-      }
+      },
 
     };
 
+    const paymentObject =
+      new window.Razorpay(
+        options
+      );
+
+    paymentObject.open();
+
+  } catch (error) {
+
+    console.log(
+      "PAYMENT ERROR:",
+      error
+    );
+
+    alert(
+      error?.response
+        ?.data
+        ?.message ||
+      error?.message ||
+      "Payment Failed"
+    );
+
+  } finally {
+
+    setProcessingFeeId(
+      null
+    );
+
+  }
+
+};
   if (loading) {
     return <Loader />;
   }
